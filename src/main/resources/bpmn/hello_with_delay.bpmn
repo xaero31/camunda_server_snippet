@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1pef4ri" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.12.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:process id="HelloWithDelay" name="Print Hello With Delay" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0chbl5n</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0chbl5n" sourceRef="StartEvent_1" targetRef="Activity_1fvpoeu" />
+    <bpmn:exclusiveGateway id="CountGate">
+      <bpmn:incoming>Flow_0le8oix</bpmn:incoming>
+      <bpmn:outgoing>Flow_0s3u9bs</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1dgs8ni</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0le8oix" sourceRef="Activity_1fvpoeu" targetRef="CountGate" />
+    <bpmn:serviceTask id="Activity_1fvpoeu" name="Print Message" camunda:type="external" camunda:topic="helloDelayTopic">
+      <bpmn:incoming>Flow_0chbl5n</bpmn:incoming>
+      <bpmn:incoming>Flow_10affe6</bpmn:incoming>
+      <bpmn:outgoing>Flow_0le8oix</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0s3u9bs" sourceRef="CountGate" targetRef="Event_1inrp1z">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${count &lt; 3}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:intermediateCatchEvent id="Event_1inrp1z">
+      <bpmn:incoming>Flow_0s3u9bs</bpmn:incoming>
+      <bpmn:outgoing>Flow_10affe6</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0qr505m">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_10affe6" sourceRef="Event_1inrp1z" targetRef="Activity_1fvpoeu" />
+    <bpmn:sequenceFlow id="Flow_1dgs8ni" sourceRef="CountGate" targetRef="FinishMessage">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${count &gt;= 3}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="FinishMessage" name="Finish Message" camunda:type="external" camunda:topic="finishMessageTopic">
+      <bpmn:incoming>Flow_1dgs8ni</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ibbpnq</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_1e23e1p">
+      <bpmn:incoming>Flow_1ibbpnq</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1ibbpnq" sourceRef="FinishMessage" targetRef="Event_1e23e1p" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="HelloWithDelay">
+      <bpmndi:BPMNEdge id="Flow_0chbl5n_di" bpmnElement="Flow_0chbl5n">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0le8oix_di" bpmnElement="Flow_0le8oix">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="425" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0s3u9bs_di" bpmnElement="Flow_0s3u9bs">
+        <di:waypoint x="450" y="142" />
+        <di:waypoint x="450" y="230" />
+        <di:waypoint x="338" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10affe6_di" bpmnElement="Flow_10affe6">
+        <di:waypoint x="320" y="212" />
+        <di:waypoint x="320" y="157" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dgs8ni_di" bpmnElement="Flow_1dgs8ni">
+        <di:waypoint x="475" y="117" />
+        <di:waypoint x="530" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ibbpnq_di" bpmnElement="Flow_1ibbpnq">
+        <di:waypoint x="630" y="117" />
+        <di:waypoint x="692" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1qnul9p_di" bpmnElement="CountGate" isMarkerVisible="true">
+        <dc:Bounds x="425" y="92" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_169zmc4_di" bpmnElement="Activity_1fvpoeu">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0h3xwbz_di" bpmnElement="Event_1inrp1z">
+        <dc:Bounds x="302" y="212" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1rxwd44_di" bpmnElement="FinishMessage">
+        <dc:Bounds x="530" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1e23e1p_di" bpmnElement="Event_1e23e1p">
+        <dc:Bounds x="692" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
